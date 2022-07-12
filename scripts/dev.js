@@ -1,7 +1,7 @@
 const webpack = require('webpack')
-const { spawn } = require('child_process')
+const { spawn, exec } = require('node:child_process')
 const electron = require('electron')
-const path = require('path')
+const path = require('node:path')
 const config = require('../config/webpack.main.config')
 
 const ROOT = path.resolve(__dirname, '../')
@@ -9,30 +9,8 @@ const now = () => `[${new Date().toLocaleString()}]`
 
 /** @type import('child_process').ChildProcess  */
 let electronProcess
-
-const compiler = webpack({
-  // [Configuration Object](/configuration/)
-  ...config,
-  mode: 'development',
-})
-
-const watching = compiler.watch(
-  {
-    // Example [watchOptions](/configuration/watch/#watchoptions)
-    aggregateTimeout: 3000,
-    poll: undefined,
-  },
-  (err, stats) => {
-    // [Stats Object](#stats-object)
-    // Print watch/build result here...
-    if (err || stats.hasErrors()) {
-      console.error('Error', err)
-    } else {
-      console.log(now(), stats.toJson('summary'))
-      startElectron()
-    }
-  }
-)
+/** @type import('webpack').Compiler  */
+let watching
 
 function startElectron () {
   console.log(now(), 'start electron')
@@ -53,3 +31,44 @@ function startElectron () {
     watching.close()
   })
 }
+
+function startMain () {
+  const compiler = webpack({
+    // [Configuration Object](/configuration/)
+    ...config,
+    mode: 'development',
+  })
+
+  watching = compiler.watch(
+    {
+      // Example [watchOptions](/configuration/watch/#watchoptions)
+      aggregateTimeout: 3000,
+      poll: undefined,
+    },
+    (err, stats) => {
+      // [Stats Object](#stats-object)
+      // Print watch/build result here...
+      if (err || stats.hasErrors()) {
+        console.error('Error', err)
+      } else {
+        console.log(now(), stats.toJson('summary'))
+        startElectron()
+      }
+    }
+  )
+}
+
+function start () {
+  // renderer
+  exec('npm run dev', { cwd: path.join(ROOT, 'src/renderer') }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`)
+      return
+    }
+    console.log(`stdout: ${stdout}`)
+    console.error(`stderr: ${stderr}`)
+  })
+  startMain()
+}
+
+start()
