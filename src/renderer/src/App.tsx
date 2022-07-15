@@ -1,5 +1,4 @@
 function App() {
-  console.log(window.versions);
   return (
     <div className="App">
       <h1>Versions</h1>
