@@ -7,7 +7,7 @@ export function loadDevTools () {
   // on windows
   const reactDevToolsPath = path.join(
     os.homedir(),
-    '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0'
+    '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.7_0'
   )
   app.whenReady().then(async () => {
     try {

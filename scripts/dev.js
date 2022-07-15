@@ -3,6 +3,7 @@ const { spawn, exec } = require('node:child_process')
 const electron = require('electron')
 const path = require('node:path')
 const config = require('../config/webpack.main.config')
+const preloadConfig = require('../config/webpack.preload.config')
 
 const ROOT = path.resolve(__dirname, '../')
 const now = () => `[${new Date().toLocaleString()}]`
@@ -20,16 +21,39 @@ function startElectron () {
     // electronProcess = null
   }
   electronProcess = spawn(electron, [path.join(ROOT, 'dist/main.js')])
-  // electronProcess.stdout.on('data', (data) => {
-  //   logger.info(data.toString(), defaultLogOptions)
-  // })
+  electronProcess.stdout.on('data', (data) => {
+    console.log(data.toString())
+  })
   electronProcess.stderr.on('data', (data) => {
     console.log(data.toString())
   })
   electronProcess.on('close', (code) => {
     console.log(`child process exited with code ${code}`)
     watching.close()
+    if (code === 0) {
+      process.exit()
+    }
   })
+}
+
+function buildPreload () {
+  webpack(
+    {
+      // [配置对象](/configuration/)
+      ...preloadConfig,
+      mode: 'development',
+    },
+    (err, stats) => {
+      // [Stats Object](#stats-object)
+      if (err || stats.hasErrors()) {
+        // [在这里处理错误](#error-handling)
+        console.error('Error', err)
+      }
+      // 处理完成
+      console.log(now(), stats.toJson('summary'))
+      console.log('build preload success')
+    }
+  )
 }
 
 function startMain () {
@@ -52,6 +76,8 @@ function startMain () {
         console.error('Error', err)
       } else {
         console.log(now(), stats.toJson('summary'))
+        console.log('build main success')
+        buildPreload()
         startElectron()
       }
     }
@@ -60,14 +86,18 @@ function startMain () {
 
 function start () {
   // renderer
-  exec('npm run dev', { cwd: path.join(ROOT, 'src/renderer') }, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`)
-      return
+  exec(
+    'npm run dev',
+    { cwd: path.join(ROOT, 'src/renderer') },
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`)
+        return
+      }
+      console.log(`stdout: ${stdout}`)
+      console.error(`stderr: ${stderr}`)
     }
-    console.log(`stdout: ${stdout}`)
-    console.error(`stderr: ${stderr}`)
-  })
+  )
   startMain()
 }
 

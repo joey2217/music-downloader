@@ -9,9 +9,9 @@ export function create () {
     width: 400,
     height: 600,
     show: false,
+    icon: path.join(__dirname, '/assets/icon.ico'),
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
   win.on('ready-to-show', () => {

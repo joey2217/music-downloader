@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, Menu } from 'electron'
 import {
   create as createMainWindow,
   focus as focusMainWindow,
@@ -8,6 +8,7 @@ import { IS_DEV } from './constants'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
+Menu.setApplicationMenu(null)
 if (!gotTheLock) {
   app.quit()
 } else {
