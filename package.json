@@ -13,7 +13,7 @@
     "build:renderer": "cd src/renderer && npm run build",
     "build:main": "webpack -c config/webpack.main.config.js",
     "build:preload": "webpack -c config/webpack.preload.config.js",
-    "lint": "eslint src/ --ext .ts --fix",
+    "lint": "eslint src/main/ --ext .ts --fix",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": {

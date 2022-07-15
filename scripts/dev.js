@@ -52,6 +52,7 @@ function buildPreload () {
       // 处理完成
       console.log(now(), stats.toJson('summary'))
       console.log('build preload success')
+      startElectron()
     }
   )
 }
@@ -78,7 +79,6 @@ function startMain () {
         console.log(now(), stats.toJson('summary'))
         console.log('build main success')
         buildPreload()
-        startElectron()
       }
     }
   )

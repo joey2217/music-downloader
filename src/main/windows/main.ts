@@ -6,7 +6,7 @@ let win: BrowserWindow
 
 export function create () {
   win = new BrowserWindow({
-    width: 400,
+    width: 800,
     height: 600,
     show: false,
     icon: path.join(__dirname, '/assets/icon.ico'),
@@ -31,4 +31,8 @@ export function focus () {
 
 export function send (channel: string, ...args: any[]) {
   win.webContents.send(channel, ...args)
+}
+
+export function toggleDevTools () {
+  win.webContents.toggleDevTools()
 }

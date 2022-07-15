@@ -1,12 +1,28 @@
-function App() {
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { RecoilRoot } from 'recoil'
+import Header from './components/Header'
+import Player from './components/Player'
+import Search from './pages/search'
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <h1>Versions</h1>
-      <h2>chrome:{window.versions.chrome}</h2>
-      <h2>node:{window.versions.node}</h2>
-      <h2>electron:{window.versions.electron}</h2>
-    </div>
-  );
+    <RecoilRoot>
+      <BrowserRouter>
+        <div className='h-screen overflow-hidden flex flex-col'>
+          <Header />
+          <main className='flex-grow overflow-hidden'>
+            <Routes>
+              <Route path="/" element={<Search />} />
+            </Routes>
+          </main>
+          <footer className='flex-shrink h-10' >
+            <Player />
+          </footer>
+        </div>
+      </BrowserRouter>
+    </RecoilRoot>
+  )
 }
 
-export default App;
+export default App

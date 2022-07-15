@@ -5,6 +5,7 @@ import {
 } from './windows/main'
 import { loadDevTools } from './dev'
 import { IS_DEV } from './constants'
+import handleIPC from './ipc'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -18,6 +19,7 @@ if (!gotTheLock) {
   })
   app.whenReady().then(() => {
     createMainWindow()
+    handleIPC()
     if (IS_DEV) {
       loadDevTools()
     }
