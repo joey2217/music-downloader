@@ -15,9 +15,14 @@ export interface Song {
   name: string;
   artist: Artist[];
   album: Album;
+  duration:string;
 }
 
 export interface Page {
   page: number;
   size: number;
+}
+
+export interface PlayingSong extends Song{
+  url:string
 }

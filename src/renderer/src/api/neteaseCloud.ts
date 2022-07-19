@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { Song, Page } from '../types'
+import { dtConverter } from '../utils'
 
 interface Response<T> {
   code: number;
@@ -156,13 +157,65 @@ export function search (keywords:string, pageParam ?: Partial<Page>) {
     if (data.code !== 200) {
       throw new Error(`请求错误 ${data.code}`)
     }
-    const { songs } = data.result
+    const { songs, songCount } = data.result
     const songList: Song[] = songs.map((s) => ({
       id: s.id,
       name: s.name,
       artist: s.ar.map((ar) => ({ id: ar.id, name: ar.name, alias: ar.alias })),
-      album: s.al
+      album: s.al,
+      duration: dtConverter(s.dt),
     }))
-    return songList
+    return {
+      list: songList,
+      total: songCount,
+    }
+  })
+}
+
+export interface FreeTimeTrialPrivilege {
+  resConsumable: boolean
+  userConsumable: boolean
+  type: number
+  remainTime: number
+}
+
+export interface MusicData {
+  id: number
+  url: string
+  br: number
+  size: number
+  md5: string
+  code: number
+  expi: number
+  type: string
+  gain: number
+  fee: number
+  uf: any
+  payed: number
+  flag: number
+  canExtend: boolean
+  freeTrialInfo: any
+  level: string
+  encodeType: string
+  freeTrialPrivilege: FreeTrialPrivilege
+  freeTimeTrialPrivilege: FreeTimeTrialPrivilege
+  urlSource: number
+  rightSource: number
+}
+
+export function getMusic (...ids:number[]) {
+  return request({
+    url: '/song/url',
+    method: 'GET',
+    params: {
+      id: Array.from(ids).join()
+    }
+  }).then(res => {
+    const { code } = res.data as Response<MusicData[]>
+    if (code !== 200) {
+      throw new Error(`请求错误 ${code}`)
+    }
+    const musicData = res.data.data as MusicData[]
+    return musicData
   })
 }

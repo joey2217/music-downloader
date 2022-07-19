@@ -13,7 +13,7 @@ const Header: React.FC = () => {
       </div>
       <Menu items={items} mode="horizontal"/>
       <div className='ml-auto'>
-        <Button type='text' onClick={window.electronAPI.toggleMainWindowDevtools}>devtools</Button>
+        <Button type='text' onClick={window.electronAPI && window.electronAPI.toggleMainWindowDevtools}>devtools</Button>
       </div>
     </header>
   )
