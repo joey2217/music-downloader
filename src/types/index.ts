@@ -14,3 +14,8 @@ export interface MusicURLData {
   br: number;
   size: number;
 }
+
+export interface MusicInfo extends SearchItem {
+  url: string;
+  pic: string;
+}

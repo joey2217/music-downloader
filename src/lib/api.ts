@@ -1,4 +1,4 @@
-import type { MusicURLData, SearchItem } from "@/types";
+import type { MusicInfo, MusicURLData, SearchItem } from "@/types";
 
 const BASE_URL = "https://music-api.gdstudio.xyz";
 
@@ -108,4 +108,22 @@ export function fetchMusicLyric(id: ParamValue, source: Source = "kuwo") {
       cache: "force-cache",
     }
   );
+}
+
+interface MusicInfoConfig {
+  source: Source;
+  br: Br;
+  size: 300 | 500;
+}
+
+export function fetchMusicURLData(info: SearchItem, config?: Partial<MusicInfoConfig>): Promise<MusicInfo> {
+  const musicPromise = fetchMusic(info.url_id, config?.source, config?.br);
+  const picPromise = fetchMusicPic(info.pic_id, config?.source, config?.size);
+  return Promise.all([musicPromise, picPromise]).then(([music, pic]) => {
+    return {
+      ...info,
+      url: music.url,
+      pic: "",
+    };
+  });
 }
