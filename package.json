@@ -1,38 +1,74 @@
 {
-  "name": "music-dowmloader",
-  "private": true,
-  "version": "0.1.0",
+  "name": "music-downloader",
+  "version": "0.0.1",
+  "description": "music-downloader is a music downloader for various music platforms.",
+  "main": "dist/main.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joey2217/music-downloader.git"
+  },
+  "keywords": [
+    "music",
+    "downloader",
+    "electron",
+    "react",
+    "vite"
+  ],
+  "bugs": {
+    "url": "https://github.com/joey2217/music-downloader/issues"
+  },
+  "homepage": "https://github.com/joey2217/music-downloader#readme",
+  "author": "Joey",
+  "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
+    "publish": "npm run build && electron-builder build -c electron-builder.config.cjs -p always",
+    "package": "npm run build && electron-builder build -c electron-builder.config.cjs",
+    "dev": "node scripts/dev.mjs",
+    "dev:renderer": "vite -c vite.config.ts",
+    "build": "vite build -c vite.config.preload.ts && vite build -c vite.config.main.ts && vite build -c vite.config.ts",
+    "prebuild": "npm run check",
+    "check": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.app.json",
+    "test": "vitest",
+    "upload": "node scripts/upload.mjs",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.12",
+    "@radix-ui/react-slot": "^1.2.0",
     "@tailwindcss/vite": "^4.1.4",
-    "@tauri-apps/api": "^2.5.0",
-    "@tauri-apps/plugin-opener": "^2.2.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "electron-log": "^5.3.4",
     "lucide-react": "^0.503.0",
+    "node-id3": "^0.2.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router": "^7.5.2",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
-    "@tauri-apps/cli": "^2.5.0",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react-swc": "^3.9.0",
+    "electron": "^35.2.1",
+    "electron-builder": "^26.0.12",
+    "electron-updater": "^6.6.2",
     "eslint": "^9.25.1",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.0.0",
     "tw-animate-css": "^1.2.8",
     "typescript": "~5.8.3",
-    "vite": "^6.3.3"
+    "typescript-eslint": "^8.31.0",
+    "vite": "^6.3.3",
+    "vitest": "^3.1.2"
   }
 }
