@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    music_dowmloader_lib::run()
+    music_downloader_lib::run()
 }

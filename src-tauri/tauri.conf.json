@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "music-dowmloader",
+  "productName": "music-downloader",
   "version": "0.1.0",
   "identifier": "com.joey.music",
   "build": {
@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "music-dowmloader",
+        "title": "music-downloader",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "decorations": false
       }
     ],
     "security": {

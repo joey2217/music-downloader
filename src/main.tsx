@@ -8,3 +8,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <App />
   </React.StrictMode>,
 );
+
+if (import.meta.env.PROD) {
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+}
