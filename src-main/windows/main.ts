@@ -1,21 +1,22 @@
 import { BrowserWindow, dialog, nativeTheme } from "electron/main";
 import * as path from "node:path";
 import { DARK_COLOR, DEV, ROOT } from "../constant";
+import { checkForUpdates } from "../updater";
 
 let win: BrowserWindow = null!;
 let quit = false;
 
 function create() {
   win = new BrowserWindow({
-    width: 600,
+    width: 450,
     height: 800,
     show: false,
     titleBarStyle: "hidden",
     backgroundColor: nativeTheme.shouldUseDarkColors ? DARK_COLOR : "#fff",
     titleBarOverlay: {
       symbolColor: "#22c55e",
-      height: 30,
-      color: nativeTheme.shouldUseDarkColors ? DARK_COLOR: "#fff",
+      height: 35,
+      color: nativeTheme.shouldUseDarkColors ? DARK_COLOR : "#fff",
     },
     webPreferences: {
       devTools: DEV,
@@ -28,6 +29,7 @@ function create() {
     if (DEV) {
       win.webContents.openDevTools({ mode: "bottom" });
     }
+    setImmediate(checkForUpdates);
   });
 
   win.on("close", (e) => {

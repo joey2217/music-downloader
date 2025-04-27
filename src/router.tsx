@@ -1,6 +1,8 @@
 import { createHashRouter } from "react-router";
 import Layout from "./layout";
-import Home, { homeLoader } from "./pages/home";
+import Home, { homeLoader }  from "./pages/home";
+import Download from "./pages/download";
+import Setting from "./pages/setting";
 
 const router = createHashRouter([
   {
@@ -10,6 +12,14 @@ const router = createHashRouter([
         path: "/",
         loader: homeLoader,
         element: <Home />,
+      },
+      {
+        path: "/download",
+        element: <Download />,
+      },
+      {
+        path: "/setting",
+        element: <Setting />,
       },
     ],
   },

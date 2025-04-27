@@ -5,8 +5,8 @@ import path from "node:path";
 import fsp from "node:fs/promises";
 import { loadDevTools } from "./dev";
 import { mainWindow } from "./windows/main";
-import handleIPC from "./ipc";
 import "./menu";
+import "./ipc";
 
 log.initialize();
 
@@ -23,7 +23,6 @@ if (!gotTheLock) {
   });
   app.whenReady().then(() => {
     mainWindow.create();
-    handleIPC();
   });
 
   app.on("open-url", (_event, url) => {

@@ -17,5 +17,10 @@ export interface MusicURLData {
 
 export interface MusicInfo extends SearchItem {
   url: string;
-  pic: string;
+  picURL: string;
+}
+
+export interface Option<K = string, V = string> {
+  label: K;
+  value: V;
 }

@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron/renderer";
 import { version } from "../../package.json";
+import type { DownloadInfo } from "../types";
 
 /**
  * Sandboxed preload scripts can't use ESM imports
@@ -8,17 +9,25 @@ import { version } from "../../package.json";
 // renderer -> main
 contextBridge.exposeInMainWorld("mainAPI", {
   toggleDevtools: () => ipcRenderer.invoke("TOGGLE_DEVTOOLS"),
+  setTheme: (theme: "system" | "light" | "dark") => ipcRenderer.invoke("SET_THEME", theme),
+  download: (...items: DownloadInfo[]) => ipcRenderer.invoke("DOWNLOAD_MUSIC", ...items),
+  openPath: (fullPath: string) => ipcRenderer.invoke("OPEN_PATH", fullPath),
+  getPath: (name: string) => ipcRenderer.invoke("GET_PATH", name),
+  showItemInFolder: (fullPath: string) => ipcRenderer.invoke("SHOW_ITEM_IN_FOLDER", fullPath),
+  selectDirectory: (config?: Pick<Electron.OpenDialogOptions, "title">) =>
+    ipcRenderer.invoke("SELECT_DIRECTORY", config),
 });
 
-// function addListener(channel: string, callback: (...args: unknown[]) => void) {
-//   const listener = (_event: Electron.IpcRendererEvent, ...args: unknown[]) =>
-//     callback(...args)
-//   ipcRenderer.on(channel, listener)
-//   return () => ipcRenderer.off(channel, listener)
-// }
+function addListener(channel: string, callback: (...args: any[]) => void) {
+  const listener = (_event: Electron.IpcRendererEvent, ...args: any[]) => callback(...args);
+  ipcRenderer.on(channel, listener);
+  return () => ipcRenderer.off(channel, listener);
+}
 
 // main -> renderer
-contextBridge.exposeInMainWorld("mainListener", {});
+contextBridge.exposeInMainWorld("mainListener", {
+  onUpdateDownload: (callback: (info: DownloadInfo) => void) => addListener("UPDATE_DOWNLOAD", callback),
+});
 
 contextBridge.exposeInMainWorld("env", {
   node: process.versions.node,

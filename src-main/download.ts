@@ -5,12 +5,10 @@ import type { DownloadInfo } from "./types";
 import { mainWindow } from "./windows/main";
 import { Promise as NodeID3Promise } from "node-id3";
 
-// import { downloadIcon } from './icons'
-
 let downloadFile: DownloadInfo;
 const downloadFiles: DownloadInfo[] = [];
 
-export function download(items: DownloadInfo[]) {
+export function download(...items: DownloadInfo[]) {
   if (items.length > 0) {
     const downloadFileIds = downloadFiles.map((f) => f.id);
     const downloadItems = items.filter((f) => !downloadFileIds.includes(f.id));
@@ -24,17 +22,35 @@ export function download(items: DownloadInfo[]) {
   }
 }
 
+function sendDownloadStatus(info: Partial<DownloadInfo>) {
+  mainWindow.send("UPDATE_DOWNLOAD", {
+    ...downloadFile,
+    ...info,
+  });
+}
+
 // https://www.electronjs.org/zh/docs/latest/api/download-item
 app.whenReady().then(() => {
-  session.defaultSession.on("will-download", (event, item) => {
+  session.defaultSession.on("will-download", (_event, item) => {
     downloadFile.downloadPath = path.normalize(downloadFile.downloadPath);
     item.setSavePath(downloadFile.downloadPath);
-    mainWindow.send("UPDATE_DOWNLOAD", {
-      ...downloadFile,
+    sendDownloadStatus({
       status: "downloading",
-    } as DownloadInfo);
+    });
 
-    item.once("done", (event, state) => {
+    // item.on("updated", (_event, state) => {
+    //   if (state === "interrupted") {
+    //     log.info("Download is interrupted but can be resumed");
+    //   } else if (state === "progressing") {
+    //     if (item.isPaused()) {
+    //       log.info("Download is paused");
+    //     } else {
+    //       log.info(`getPercentComplete: ${item.getPercentComplete()}`);
+    //     }
+    //   }
+    // });
+
+    item.once("done", (_event, state) => {
       if (state === "completed") {
         log.info("Download successfully", downloadFile.downloadPath);
         onCompleted(true);
@@ -63,10 +79,9 @@ function fetchCoverBuffer(imgUrl: string): Promise<ArrayBuffer | undefined> {
 
 function onCompleted(success: boolean) {
   if (downloadFile) {
-    mainWindow.send("UPDATE_DOWNLOAD", {
-      ...downloadFile,
+    sendDownloadStatus({
       status: success ? "completed" : "failed",
-    } as DownloadInfo);
+    });
     if (success) {
       fetchCoverBuffer(downloadFile.cover).then((buffer) => {
         NodeID3Promise.write(
