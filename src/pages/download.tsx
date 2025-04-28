@@ -5,6 +5,7 @@ import { useSettingStore } from "@/store/setting";
 
 export default function Download() {
   const list = useDownloadStore((s) => s.items);
+  const remove = useDownloadStore((s) => s.remove);
   const downloadDir = useSettingStore((s) => s.downloadDir);
   return (
     <div>
@@ -26,7 +27,7 @@ export default function Download() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {list.map((item) => (
+          {list.map((item, i) => (
             <TableRow key={item.id}>
               <TableCell>{item.title}</TableCell>
               <TableCell>{item.artist}</TableCell>
@@ -34,7 +35,10 @@ export default function Download() {
                 {item.album}
               </TableCell>
               <TableCell>{item.status}</TableCell>
-              <TableCell></TableCell>
+              <TableCell className="space-x-1">
+                <button onClick={() => remove(i)}>删除</button>
+                <button onClick={() => window.mainAPI.showItemInFolder(item.downloadPath)}>打开</button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

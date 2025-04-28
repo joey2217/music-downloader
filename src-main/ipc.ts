@@ -21,6 +21,10 @@ app.whenReady().then(() => {
     return shell.openPath(path.normalize(fullPath));
   });
 
+  ipcMain.handle("SHOW_ITEM_IN_FOLDER", (_event, fullPath: string) => {
+    return shell.showItemInFolder(fullPath);
+  });
+
   ipcMain.handle("GET_PATH", (_event, name) => {
     return app.getPath(name);
   });

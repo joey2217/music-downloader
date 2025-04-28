@@ -1,13 +1,11 @@
 import { fetchMusicURLData, fetchSearch, PAGE_SZIE } from "@/lib/api";
 import type { SearchItem } from "@/types";
 import { Suspense } from "react";
-import { Await, Form, Link, LoaderFunction, useLoaderData } from "react-router";
+import { Await, Form, LoaderFunction, useLoaderData } from "react-router";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { getFileExtension } from "@/lib";
 import { useDownloadStore } from "@/store/download";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -16,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useSettingStore } from "@/store/setting";
 
 export const homeLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -54,6 +53,7 @@ interface Props {
 
 function SearchTable({ searchItems, page, keyword }: Props) {
   const download = useDownloadStore((s) => s.download);
+  const downloadDir = useSettingStore((s) => s.downloadDir);
   const onDownload = async (searchItem: SearchItem) => {
     const { url, artist: rawArtist, name, id, album, picURL } = await fetchMusicURLData(searchItem);
     const ext = getFileExtension(url);
@@ -61,7 +61,7 @@ function SearchTable({ searchItems, page, keyword }: Props) {
     const fileName = `${artist}-${name}.${ext}`;
     download({
       fileName,
-      downloadPath: `D:\\static/${fileName}`,
+      downloadPath: `${downloadDir}/${fileName}`,
       id,
       url,
       title: name,

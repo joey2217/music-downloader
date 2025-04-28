@@ -1,4 +1,4 @@
-import type { DownloadInfo } from "@/vite-env";
+import type { DownloadInfo } from "@/renderer";
 import { useEffect } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -8,6 +8,7 @@ interface DownloadState {
   items: DownloadInfo[];
   download: (...items: DownloadInfo[]) => Promise<void>;
   update: (info: DownloadInfo) => void;
+  remove: (index: number) => void;
 }
 
 export const useDownloadStore = create<DownloadState>()(
@@ -26,6 +27,10 @@ export const useDownloadStore = create<DownloadState>()(
       update: (info: DownloadInfo) =>
         set((s) => ({
           items: s.items.map((item) => (item.id === info.id ? { ...item, ...info } : item)),
+        })),
+      remove: (index: number) =>
+        set((s) => ({
+          items: s.items.toSpliced(index, 1),
         })),
     }),
     {

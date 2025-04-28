@@ -14,7 +14,7 @@ function create() {
     titleBarStyle: "hidden",
     backgroundColor: nativeTheme.shouldUseDarkColors ? DARK_COLOR : "#fff",
     titleBarOverlay: {
-      symbolColor: "#22c55e",
+      symbolColor: "#7f22fe",
       height: 35,
       color: nativeTheme.shouldUseDarkColors ? DARK_COLOR : "#fff",
     },

@@ -42,11 +42,11 @@ export type Source =
 
 export const SOURCE_OPTIONS: Option<string, Source>[] = [
   {
-    label: "酷我",
+    label: "酷我(稳定)",
     value: "kuwo",
   },
   {
-    label: "网易云",
+    label: "网易云(稳定)",
     value: "netease",
   },
   {
@@ -66,11 +66,11 @@ export const SOURCE_OPTIONS: Option<string, Source>[] = [
     value: "qobuz",
   },
   {
-    label: "TIDAL",
+    label: "TIDAL(稳定)",
     value: "tidal",
   },
   {
-    label: "JOOX",
+    label: "JOOX(稳定)",
     value: "joox",
   },
   {
@@ -112,7 +112,12 @@ const t = import.meta.env.PROD ? Date.now() : 1;
 
 // 搜索
 // API：https://music-api.gdstudio.xyz/api.php?types=search&source=[MUSIC SOURCE]&name=[KEYWORD]&count=[PAGE LENGTH]&pages=[PAGE NUM]
-export function fetchSearch(keyword: string, page: ParamValue = 1, source = localConfig.source, size: ParamValue = PAGE_SZIE) {
+export function fetchSearch(
+  keyword: string,
+  page: ParamValue = 1,
+  source = localConfig.source,
+  size: ParamValue = PAGE_SZIE
+) {
   if (!keyword) {
     return Promise.resolve([]);
   }
